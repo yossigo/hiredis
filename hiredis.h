@@ -242,6 +242,23 @@ int redisSecureConnection(redisContext *c, const char *capath, const char *certp
                           const char *keypath, const char *servername);
 
 /**
+ * An advanced version of redisSecureConnection() which provides the caller with
+ * full control of all OpenSSL configuration.
+ *
+ * Caller is expected to provide an initialized and configured OpenSSL SSL connection
+ * object:
+ * 1. If client authentication is required, it should be configured with a certificate
+ *    and a private key.
+ * 2. If server certificate authentication is required, the CA path/bundle should be
+ *    configured.  Otherwise, verification should be explicitly disabled.
+ *
+ * NOTE: Consider moving SSL stuff to a separate header file, so we can freely
+ * include <openssl/ssl.h> and be able to define a type-safe SSL argument.
+ */
+
+int redisConnectSSL(redisContext *c, void *ssl);
+
+/**
  * Reconnect the given context using the saved information.
  *
  * This re-uses the exact same connect options as in the initial connection.
